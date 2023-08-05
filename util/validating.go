@@ -21,10 +21,11 @@ func ValidateUsername(username string) error {
 	}
 	return nil
 }
-func ValidateSignupInput(username, email, password string) error {
+func ValidateSignupInput(name, username, email, password string) error {
 	user := vm.SignUpUser{
-		Username: strings.ToLower(username),
-		Email:    strings.ToLower(email),
+		Name:     name,
+		Username: username,
+		Email:    email,
 		Password: password,
 	}
 	// Create a new validator instance
@@ -39,6 +40,20 @@ func ValidateLoginInput(email, password string) error {
 	user := vm.LoginUser{
 		Email:    strings.ToLower(email),
 		Password: password,
+	}
+	// Create a new validator instance
+	validate := validator.New()
+	// Validate the struct fields
+	if err := validate.Struct(user); err != nil {
+		return err
+	}
+	return nil
+}
+func ValidateUpdateProfileInput(name, username, bio string) error {
+	user := vm.UpdateProfile{
+		Name:     name,
+		Username: username,
+		Bio:      bio,
 	}
 	// Create a new validator instance
 	validate := validator.New()

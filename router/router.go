@@ -31,10 +31,13 @@ func SetupRoutes(app *fiber.App) {
 	protected.Get(Logout, handlers.LogOut)
 	protected.Get(About, handlers.About)
 	protected.Get(Profile, handlers.Profile)
+	protected.Get(Settings, handlers.Settings)
+	protected.Post(Settings, handlers.UpdateProfile)
 	// Setup static files
 	app.Static("/public", "./public")
 
 	// Handle not founds
 	app.Use(handlers.NotFound)
+	protected.Use(handlers.NotFound)
 
 }

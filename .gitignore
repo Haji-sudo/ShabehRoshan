@@ -19,7 +19,15 @@
 node_modules/
 .parcel-cache/
 temp/
+.vscode/
 # Go workspace file
 go.work
 
 .env
+.prettierrc.json
+.hintrc
+.prettierignore
+.gitignore
+public/assets/app.css
+public/assets/app.css.map
+public/profile/*

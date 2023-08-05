@@ -9,6 +9,7 @@ const (
 	ResendVerifyEmail string = "/resend-verify-email"
 	Logout            string = "/logout"
 	Profile           string = "/profile"
+	Settings          string = "/settings"
 
 	UserPanel string = "Dashboard"
 

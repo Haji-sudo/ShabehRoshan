@@ -37,8 +37,7 @@ type Token struct {
 type Profile struct {
 	UserID         uuid.UUID `gorm:"type:char(36);primaryKey" json:"user_id"`
 	ProfilePicture string    `json:"profile_picture"`
-	FirstName      string    `json:"first_name"`
-	LastName       string    `json:"last_name"`
+	Name           string    `json:"name"`
 	DateOfBirth    time.Time `json:"date_of_birth"`
 	Bio            string    `json:"bio"`
 }

@@ -25,12 +25,13 @@ func SignUp(c *fiber.Ctx) error {
 }
 
 func SignupUser(c *fiber.Ctx) error {
+	name := c.FormValue("name")
 	username := c.FormValue("username")
 	email := c.FormValue("email")
 	password := c.FormValue("password")
-	data := v.SignUpUser{Username: username, Email: email, Password: ""}
+	data := v.SignUpUser{Name: name, Username: username, Email: email, Password: ""}
 	//Check Input IsValid
-	err := util.ValidateSignupInput(username, email, password)
+	err := util.ValidateSignupInput(name, username, email, password)
 	if err != nil {
 		errorData := new(v.SignUpUser)
 		for _, v := range err.(validator.ValidationErrors) {
@@ -39,9 +40,12 @@ func SignupUser(c *fiber.Ctx) error {
 				data.Email = ""
 			} else if v.Field() == "Username" {
 				errorData.Username = "Username is not valid !"
-				data.Email = ""
+				data.Username = ""
 			} else if v.Field() == "Password" {
 				errorData.Password = "The minimum length is 8 characters !"
+			} else if v.Field() == "Name" {
+				errorData.Name = "Name is not valid !"
+				data.Name = ""
 			}
 		}
 		return c.Render("user/signup", fiber.Map{
@@ -74,7 +78,7 @@ func SignupUser(c *fiber.Ctx) error {
 		return c.Render("user/error", "Something Wrong in Password hashing try again !!")
 	}
 
-	user := models.User{ID: uuid.New(), Username: strings.ToLower(username), Email: strings.ToLower(email), PasswordHash: string(hashpw)}
+	user := models.User{ID: uuid.New(), Username: strings.ToLower(username), Email: strings.ToLower(email), PasswordHash: string(hashpw), Profile: models.Profile{Name: name}}
 	err = repo.Create(&user)
 	if err != nil {
 		repo.Delete(&user)
@@ -93,6 +97,7 @@ func SignupUser(c *fiber.Ctx) error {
 		return c.Render("user/error", "Failed to Verification Email")
 	}
 	repo.Update(&user)
+	repo.UpdateProfile(&user)
 	return c.Render("user/successSignup", data)
 }
 
