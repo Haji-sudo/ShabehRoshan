@@ -83,6 +83,7 @@ func IsAuth(c *fiber.Ctx) bool {
 		sess.Destroy()
 		return false
 	}
+	c.Locals("userid", userid)
 	return true
 }
 

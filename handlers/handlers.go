@@ -16,8 +16,12 @@ const Layout = "layouts/main"
 // Home renders the home view
 func Home(c *fiber.Ctx) error {
 	if middleware.IsAuth(c) {
+		repo := repository.NewUserRepository()
+		userid := c.Locals("userid").(string)
+		user, _ := repo.GetByID(uuid.MustParse(userid))
+		repo.GetProfile(user)
 		return c.Render("index", fiber.Map{
-			"Title": "Hello, World!", "user": "test",
+			"Title": "Hello, World!", "user": user,
 		}, Layout)
 	}
 	return c.Render("index", fiber.Map{
