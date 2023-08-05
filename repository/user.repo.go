@@ -22,6 +22,7 @@ type UserRepository interface {
 	GetToken(user *m.User) error
 	UpdateToken(user *m.User) error
 	GetProfile(user *m.User) error
+	UpdateProfile(user *m.User) error
 
 	BatchUpdate(user *m.User) error
 	GetAllPosts(userid uuid.UUID) ([]m.Blog, error)
@@ -124,4 +125,7 @@ func (r *userRepo) UpdateToken(user *m.User) error {
 
 func (r *userRepo) Delete(user *m.User) error {
 	return r.db.Delete(user).Error
+}
+func (r *userRepo) UpdateProfile(user *m.User) error {
+	return r.db.Save(user.Profile).Error
 }

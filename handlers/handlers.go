@@ -61,5 +61,8 @@ func Test(c *fiber.Ctx) error {
 
 // NoutFound renders the 404 view
 func NotFound(c *fiber.Ctx) error {
+	if middleware.IsAuth(c) {
+		return c.Status(404).Render("partials/404", fiber.Map{"user": "test"}, Layout)
+	}
 	return c.Status(404).Render("partials/404", nil, Layout)
 }
