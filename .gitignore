@@ -7,7 +7,6 @@
 *.dll
 *.so
 *.dylib
-.env.local
 
 # Test binary, built with `go test -c`
 *.test
@@ -22,3 +21,5 @@ node_modules/
 temp/
 # Go workspace file
 go.work
+
+.env
