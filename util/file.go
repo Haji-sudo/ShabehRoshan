@@ -6,9 +6,9 @@ import (
 	"mime/multipart"
 	"os"
 
-	"github.com/disintegration/imaging"
+	_ "github.com/disintegration/imaging"
 	"github.com/google/uuid"
-	"github.com/nfnt/resize"
+	_ "github.com/nfnt/resize"
 )
 
 func SavePhotoAndOptimze(photo *multipart.FileHeader) (string, error) {
@@ -24,11 +24,6 @@ func SavePhotoAndOptimze(photo *multipart.FileHeader) (string, error) {
 		return "", err
 	}
 	//TODO: Remove EXIF from photo
-	//Resize the image if needed
-	img = resize.Resize(300, 300, img, resize.Lanczos3)
-
-	//Optimize the image for the web
-	img = imaging.AdjustBrightness(img, 10)
 
 	// Save the image in PNG format
 	outputFileName := uuid.NewString() + ".png"

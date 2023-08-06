@@ -25,8 +25,8 @@ func SendingVerificationEmail(to, username, token string) error {
 	}
 	// Get the final rendered email HTML
 	body := renderedEmail.String()
-	from := "shabeh.roshan.email@gmail.com"
-	pass := "ggzhktcnfjavikhf"
+	from := os.Getenv("GMAIL")
+	pass := os.Getenv("GMAIL_APP_PASSWORD")
 	headers := "From: " + from + "\r\n" +
 		"To: " + to + "\r\n" +
 		"Subject: Confirm Email\r\n" +
