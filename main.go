@@ -9,6 +9,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/favicon"
 )
 
 func main() {
@@ -24,6 +25,9 @@ func main() {
 	app := fiber.New(fiber.Config{
 		Views: config.Engine,
 	})
+	app.Use(favicon.New(favicon.Config{
+		File: "./public/images/favicon.ico",
+	}))
 	app.Use(cors.New())
 	// app.Use(csrf.New())
 	//Setup Routes

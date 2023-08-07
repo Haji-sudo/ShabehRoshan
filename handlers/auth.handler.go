@@ -13,18 +13,18 @@ import (
 	"github.com/haji-sudo/ShabehRoshan/models"
 	v "github.com/haji-sudo/ShabehRoshan/models/validation"
 	"github.com/haji-sudo/ShabehRoshan/repository"
+	"github.com/haji-sudo/ShabehRoshan/router/routes"
 	"github.com/haji-sudo/ShabehRoshan/services"
 	"github.com/haji-sudo/ShabehRoshan/util"
 )
 
 func SignUp(c *fiber.Ctx) error {
-	if !middleware.CheckAuthNotValid(c) {
-		return c.Redirect("/")
+	if c.Method() == "GET" {
+		if !middleware.CheckAuthNotValid(c) {
+			return c.Redirect(routes.Home)
+		}
+		return c.Render("user/signup", nil, Layout)
 	}
-	return c.Render("user/signup", nil, Layout)
-}
-
-func SignupUser(c *fiber.Ctx) error {
 	name := c.FormValue("name")
 	username := c.FormValue("username")
 	email := c.FormValue("email")
@@ -91,7 +91,7 @@ func SignupUser(c *fiber.Ctx) error {
 	}
 	repo.GetToken(&user)
 	user.Token.VerifyEmailToken = emailValidateToken
-	err = services.SendingVerificationEmail(user.Email, user.Username, emailValidateToken)
+	err = services.SendVerificationEmail(user.Email, user.Username, emailValidateToken)
 	if err != nil {
 		repo.Delete(&user)
 		return c.Render("user/error", "Failed to Verification Email")
@@ -100,15 +100,14 @@ func SignupUser(c *fiber.Ctx) error {
 	repo.UpdateProfile(&user)
 	return c.Render("user/successSignup", data)
 }
-
 func Login(c *fiber.Ctx) error {
-	if !middleware.CheckAuthNotValid(c) {
-		return c.Redirect("/")
+	if c.Method() == "GET" {
+		if !middleware.CheckAuthNotValid(c) {
+			return c.Redirect(routes.Home)
+		}
+		return c.Render("user/login", nil, Layout)
 	}
-	return c.Render("user/login", nil, Layout)
-}
 
-func LoginUser(c *fiber.Ctx) error {
 	middleware.CheckAuthNotValid(c)
 	email := c.FormValue("email")
 	password := c.FormValue("password")
@@ -177,17 +176,15 @@ func LoginUser(c *fiber.Ctx) error {
 
 	return nil
 }
-
 func LogOut(c *fiber.Ctx) error {
 	sess, err := db.Store.Get(c)
 	if err != nil {
-		return c.Redirect("/login")
+		return c.Redirect(routes.Login)
 	}
 	sess.Destroy()
 
-	return c.Redirect("/")
+	return c.Redirect(routes.Home)
 }
-
 func VerifyEmail(c *fiber.Ctx) error {
 	token := c.Query("token")
 
@@ -217,12 +214,42 @@ func VerifyEmail(c *fiber.Ctx) error {
 	repo.UpdateToken(user)
 	return c.Render("user/verification-success", nil)
 }
-func ResendEmail(c *fiber.Ctx) error {
-	middleware.CheckAuthNotValid(c)
-	return c.Render("user/ResendEmail", nil, Layout)
-
-}
 func ResendVerifyEmail(c *fiber.Ctx) error {
+	token := c.Query("token")
+
+	if token == "" {
+		return c.Render("user/error", "Missing verification token")
+	}
+	userid, err := util.ValidateToken(token)
+	if err != nil {
+		return c.Render("user/error", "The token is not valid")
+	}
+	repo := repository.NewUserRepository()
+
+	user, err := repo.GetByID(uuid.MustParse(userid))
+	if err != nil {
+		return c.Render("user/error", "The token is not valid")
+	}
+
+	repo.GetToken(user)
+	if user.Token.VerifyEmailToken != token {
+		return c.Render("user/error", "The token is not valid")
+	}
+
+	user.EmailVerified = true
+	user.Active = true
+	user.Token.VerifyEmailToken = ""
+	repo.Update(user)
+	repo.UpdateToken(user)
+	return c.Render("user/verification-success", nil)
+}
+func ResendEmail(c *fiber.Ctx) error {
+	if c.Method() == "GET" {
+		if !middleware.CheckAuthNotValid(c) {
+			return c.Redirect(routes.Home)
+		}
+		return c.Render("user/ResendEmail", nil, Layout)
+	}
 	email := c.FormValue("email")
 	if email == "" {
 		err := c.Render("user/ResendEmail", fiber.Map{"error": "Email is required"})
@@ -252,7 +279,7 @@ func ResendVerifyEmail(c *fiber.Ctx) error {
 		return c.Render("user/ResendEmail", fiber.Map{"NotSuccess": "Failed to generate token"})
 	}
 
-	err = services.SendingVerificationEmail(user.Email, user.Username, validateToken)
+	err = services.SendVerificationEmail(user.Email, user.Username, validateToken)
 	if err != nil {
 		return c.Render("user/ResendEmail", fiber.Map{"NotSuccess": "Failed to send email. Please try again."})
 	}
@@ -261,4 +288,125 @@ func ResendVerifyEmail(c *fiber.Ctx) error {
 	repo.UpdateToken(user)
 
 	return c.Render("user/ResendEmail", fiber.Map{"Success": "Confirmation email has been sent"})
+}
+func ForgotPassword(c *fiber.Ctx) error {
+	if c.Method() == "GET" {
+		if !middleware.CheckAuthNotValid(c) {
+			return c.Redirect(routes.Home)
+		}
+		return c.Render("user/ForgotPassword", nil, Layout)
+	}
+	email := c.FormValue("email")
+	if email == "" {
+		err := c.Render("user/ForgotPassword", fiber.Map{"error": "Email is required"})
+		return err
+	}
+
+	err := util.ValidateEmail(email)
+	if err != nil {
+		return c.Render("user/ForgotPassword", fiber.Map{"error": "Email is not valid"})
+	}
+
+	repo := repository.NewUserRepository()
+
+	// Check if email exists
+	if exists, _ := repo.EmailExist(email); !exists {
+		return c.Render("user/ForgotPassword", fiber.Map{"error": "Couldn't find an account associated with this email. Try again or create an account."})
+	}
+
+	user, _ := repo.GetByEmail(email)
+
+	if !user.EmailVerified {
+		return c.Render("user/ForgotPassword", fiber.Map{"NotSuccess": "This email has not verified"})
+	}
+
+	validateToken, err := util.GenerateValidationToken(*user)
+	if err != nil {
+		return c.Render("user/ForgotPassword", fiber.Map{"NotSuccess": "Failed to generate token"})
+	}
+
+	err = services.SendResetPasswordEmail(user.Email, user.Username, validateToken)
+	if err != nil {
+		return c.Render("user/ForgotPassword", fiber.Map{"NotSuccess": "Failed to send email. Please try again."})
+	}
+	repo.GetToken(user)
+	user.Token.ForgotPasswordToken = validateToken
+	repo.UpdateToken(user)
+
+	return c.Render("user/ForgotPassword", fiber.Map{"Success": "Confirmation email has been sent"})
+}
+func ResetPassword(c *fiber.Ctx) error {
+	if c.Method() == "GET" {
+		token := c.Query("token")
+
+		if token == "" {
+			return c.Render("user/error", "Missing verification token")
+		}
+		userid, err := util.ValidateToken(token)
+		if err != nil {
+			return c.Render("user/error", "The token is not valid")
+		}
+		repo := repository.NewUserRepository()
+
+		user, err := repo.GetByID(uuid.MustParse(userid))
+		if err != nil {
+			return c.Render("user/error", "The token is not valid")
+		}
+
+		repo.GetToken(user)
+		if user.Token.ForgotPasswordToken != token {
+			return c.Render("user/error", "The token is not valid")
+		}
+
+		c.Cookie(&fiber.Cookie{
+			Name:     "ForgotPassword",
+			Value:    token,
+			Expires:  time.Now().Add(time.Minute * 10),
+			HTTPOnly: false,
+			Secure:   false,
+			SameSite: "Lax",
+		})
+		return c.Render("user/ResetPassword", nil, Layout)
+	}
+	token := c.Cookies("ForgotPassword")
+	if token == "" {
+		return c.Render("user/error", "Missing verification token")
+	}
+	userid, err := util.ValidateToken(token)
+	if err != nil {
+		return c.Render("user/error", "The token is not valid")
+	}
+	repo := repository.NewUserRepository()
+
+	user, err := repo.GetByID(uuid.MustParse(userid))
+	if err != nil {
+		return c.Render("user/error", "The token is not valid")
+	}
+
+	repo.GetToken(user)
+	if user.Token.ForgotPasswordToken != token {
+		return c.Render("user/error", "The token is not valid")
+	}
+	password := c.FormValue("password")
+	confirm_password := c.FormValue("confirm_password")
+	if password != confirm_password {
+		return c.Render("user/error", "Password not match")
+	}
+	if err := util.ValidatePassword(password); err != nil {
+		return c.Render("user/error", "Password not valid")
+	}
+	hashpw, err := util.HashPassword(password)
+	if err != nil {
+		return c.Render("user/error", "Something Wrong in Password hashing try again !!")
+	}
+	if err := util.ComparePassword([]byte(user.PasswordHash), password); err == nil {
+		return c.Render("user/error", "The password is the same as your previous password")
+	}
+	user.PasswordHash = string(hashpw)
+	user.Token.ForgotPasswordToken = ""
+
+	repo.Update(user)
+	repo.UpdateToken(user)
+
+	return c.Render("user/resetpassword-success", nil)
 }

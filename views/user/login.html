@@ -1,120 +1,70 @@
 <div class="text-white" id="login">
   {{ if .NotSuccess }}
-    <div class="alert alert-error max-w-xs">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="stroke-current shrink-0 h-6 w-6"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-      </svg>
-      <span
-        >{{ .NotSuccess }}
-        {{ if .notverfied }}
-          <a href="resend-verify-email" class="link link-info"
-            >Resend Verification Email</a
-          >
-        {{ end }}
-      </span>
-    </div>
+  <div class="alert alert-error max-w-xs">
+    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <span>{{ .NotSuccess }}
+      {{ if .notverfied }}
+      <a href={{URL "ResendVerifyEmail" }} class="link link-info">Resend Verification Email</a>
+      {{ end }}
+    </span>
+  </div>
   {{ end }}
   <div class="max-w-md w-full">
     <div class="text-center">
       <h2 class="mt-6 text-3xl font-extrabold">Login</h2>
     </div>
 
-    <form
-      id="login-form"
-      hx-post="/login"
-      hx-target="#login"
-      class="mt-8 space-y-4"
-    >
+    <form id="login-form" hx-post="/login" hx-target="#login" class="mt-8 space-y-4">
       <div class="rounded-md shadow-sm space-y-4">
         <div class="form-control w-full max-w-xs">
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            class="input
-          input-bordered w-full max-w-xs"
-            {{ if .data.Email }}
-              value="{{ .data.Email }}"
-            {{ end }}
-          />
+          <input type="email" name="email" placeholder="Email" class="input
+          input-bordered w-full max-w-xs" {{ if .data.Email }} value="{{ .data.Email }}" {{ end }} />
           {{ if .error.Email }}
-            <label class="label">
-              <span class="label-text-alt text-red-600">
-                {{ .error.Email }}
-              </span>
-            </label>
+          <label class="label">
+            <span class="label-text-alt text-red-600">
+              {{ .error.Email }}
+            </span>
+          </label>
           {{ end }}
         </div>
 
         <div class="form-control w-full max-w-xs">
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            class="input input-bordered w-full max-w-xs"
-          />
+          <input type="password" name="password" placeholder="Password" class="input input-bordered w-full max-w-xs" />
           {{ if .error.Password }}
-            <label class="label">
-              <span class="label-text-alt text-red-600">
-                {{ .error.Password }}
-              </span>
-            </label>
+          <label class="label">
+            <span class="label-text-alt text-red-600">
+              {{ .error.Password }}
+            </span>
+          </label>
           {{ end }}
         </div>
       </div>
 
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div class="flex items-center mb-4 sm:mb-0">
-          <input
-            id="remember_me"
-            name="remember_me"
-            type="checkbox"
-            class="checkbox checkbox-info h-4 w-4 rounded"
-          />
-          <label
-            for="remember_me"
-            class="cursor-pointer label ml-2 block text-sm"
-          >
+          <input id="remember_me" name="remember_me" type="checkbox" class="checkbox checkbox-info h-4 w-4 rounded" />
+          <label for="remember_me" class="cursor-pointer label ml-2 block text-sm">
             Remember me
           </label>
         </div>
 
         <div class="text-sm">
-          <a href="#" class="link link-info">Forgot your password?</a>
+          <a href={{URL "ForgotPassword" }} class="link link-info">Forgot your password?</a>
         </div>
       </div>
 
       <div class="mt-6">
-        <button
-          type="submit"
-          class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
+        <button type="submit"
+          class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
           <span class="absolute left-0 inset-y-0 flex items-center pl-3">
             <!-- Heroicon name: solid/lock-closed -->
-            <svg
-              class="h-5 w-5 text-indigo-500"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5v.01M9 13v.01M14 10h.01M5 10h.01M12.39 15.39l.01-.01M7.61 4.61l.01-.01M15.36 8.64a9 9 0 11-12.73 0l.01-.01M18 10v2a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2h12a2 2 0 012 2z"
-              />
+            <svg class="h-5 w-5 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"
+              stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 5v.01M9 13v.01M14 10h.01M5 10h.01M12.39 15.39l.01-.01M7.61 4.61l.01-.01M15.36 8.64a9 9 0 11-12.73 0l.01-.01M18 10v2a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2h12a2 2 0 012 2z" />
             </svg>
           </span>
           Sign in
