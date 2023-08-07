@@ -9,14 +9,21 @@ import (
 
 func ValidateEmail(email string) error {
 	validate := validator.New()
-	if err := validate.Var(strings.ToLower(email), "required,email"); err != nil {
+	if err := validate.Var(email, "required,email"); err != nil {
 		return err
 	}
 	return nil
 }
 func ValidateUsername(username string) error {
 	validate := validator.New()
-	if err := validate.Var(strings.ToLower(username), "required,min=4,max=20,alphanum"); err != err {
+	if err := validate.Var(username, "required,min=4,max=20,alphanum"); err != err {
+		return err
+	}
+	return nil
+}
+func ValidatePassword(password string) error {
+	validate := validator.New()
+	if err := validate.Var(password, "required,min=8"); err != nil {
 		return err
 	}
 	return nil

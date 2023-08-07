@@ -27,7 +27,6 @@ func main() {
 	})
 	app.Use(favicon.New(favicon.Config{
 		File: "./public/images/favicon.ico",
-		URL:  "/favicon.ico",
 	}))
 	app.Use(cors.New())
 	// app.Use(csrf.New())

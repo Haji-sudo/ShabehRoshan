@@ -22,11 +22,15 @@ func SetupRoutes(app *fiber.App) {
 	app.Get(routes.SignUp, handlers.SignUp)
 	app.Get(routes.Login, handlers.Login)
 	app.Get(routes.VerifyEmail, handlers.VerifyEmail)
-	app.Get(routes.ResendVerifyEmail, handlers.ResendEmail)
+	app.Get(routes.ResendVerifyEmail, handlers.ResendVerifyEmail)
+	app.Get(routes.ForgotPassword, handlers.ForgotPassword)
+	app.Get(routes.ResetPassword, handlers.ResetPassword)
 	//
-	app.Post(routes.SignUp, handlers.SignupUser)
-	app.Post(routes.Login, handlers.LoginUser)
+	app.Post(routes.SignUp, handlers.SignUp)
+	app.Post(routes.Login, handlers.Login)
 	app.Post(routes.ResendVerifyEmail, handlers.ResendVerifyEmail)
+	app.Post(routes.ForgotPassword, handlers.ForgotPassword)
+	app.Post(routes.ResetPassword, handlers.ResetPassword)
 
 	protected := app.Group(routes.UserPanel, middleware.Auth)
 	protected.Get(routes.Logout, handlers.LogOut)
