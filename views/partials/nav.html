@@ -8,7 +8,7 @@
       </label>
       <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-10 p-2 shadow bg-base-100 rounded-box w-52">
         <li>
-          <a href="/">
+          <a href={{URL "Home" }}>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -17,7 +17,7 @@
         </li>
 
         <li>
-          <a hx-get="/about" hx-target="#main">
+          <a hx-get={{URL "About" }} hx-target="#main">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -28,14 +28,14 @@
     </div>
   </div>
   <div class="navbar-center">
-    <a class="text-xl hover:text-orange-500" href="/">Shabeh Roshan</a>
+    <a class="text-xl hover:text-orange-500" href={{URL "Home" }}>Shabeh Roshan</a>
   </div>
 
   <div class="navbar-end">
     {{ if .user }}
     <div class="flex-none">
       <div class="dropdown dropdown-end">
-        <label tabindex="0" class="btn btn-ghost btn-circle">
+        <!-- <label tabindex="0" class="btn btn-ghost btn-circle">
           <div class="indicator">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
@@ -53,16 +53,15 @@
               <button class="btn btn-primary btn-block">View cart</button>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="dropdown dropdown-end">
       <label tabindex="0" class="btn btn-ghost btn-circle avatar">
         <div class="w-10 rounded-full">
-          {{if eq .user.Profile.ProfilePicture "" }}
+          {{ with eq .user.Profile.ProfilePicture "" }}
           <img src="/public/images/profile.jpg" alt="User Avatar" class="w-48 h-48 object-cover rounded-md mb-4" />
           {{else}}
-
           <img src="/public/profile/{{ .user.Profile.ProfilePicture }}" alt="User Avatar"
             class="w-48 h-48 object-cover rounded-md mb-4" />
           {{end}}
@@ -70,19 +69,18 @@
       </label>
       <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
         <li>
-          <a class="justify-between" href="/Dashboard/profile">
-            Profile
-            <span class="badge">New</span>
-          </a>
+          <a class="justify-between" href={{URL "Profile" }}>Profile</a>
         </li>
-        <li><a href="/Dashboard/settings">Settings</a></li>
-        <li><a href="/Dashboard/logout">Logout</a></li>
+        <li><a href={{URL "Settings" }}>Settings</a></li>
+        <li><a href={{URL "Logout" }}>Logout</a></li>
       </ul>
     </div>
     {{ else }}
-    <a href="/login" class=" text-white rounded-md px-3 py-2 text-sm font-medium hover:text-orange-500">Login</a>
+    <a href={{URL "Login" }}
+      class=" text-white rounded-md px-3 py-2 text-sm font-medium hover:text-orange-500">Login</a>
     <!-- Sign Up button -->
-    <a href="/signup" class=" text-white rounded-md px-3 py-2 text-sm font-medium hover:text-orange-500">Sign Up</a>
+    <a href={{URL "Signup" }} class=" text-white rounded-md px-3 py-2 text-sm font-medium hover:text-orange-500">Sign
+      Up</a>
     {{ end }}
   </div>
 </nav>

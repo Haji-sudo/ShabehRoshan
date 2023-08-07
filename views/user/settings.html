@@ -2,7 +2,7 @@
   <div class="bg-gray-800 rounded-lg shadow-lg p-4">
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div>
-        <form id="settings-form" hx-post="/Dashboard/settings" hx-target="#settings" hx-encoding='multipart/form-data'
+        <form id="settings-form" hx-post={{URL "Settings" }} hx-target="#settings" hx-encoding='multipart/form-data'
           class="mt-8 space-y-4">
           <div>
             {{if eq .user.Profile.ProfilePicture "" }}

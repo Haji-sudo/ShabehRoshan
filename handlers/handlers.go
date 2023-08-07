@@ -21,8 +21,9 @@ func Home(c *fiber.Ctx) error {
 		user, _ := repo.GetByID(uuid.MustParse(userid))
 		repo.GetProfile(user)
 		return c.Render("index", fiber.Map{
-			"Title": "Hello, World!", "user": user,
+			"Title": "Hello", "user": user,
 		}, Layout)
+
 	}
 	return c.Render("index", fiber.Map{
 		"Title": "Hello, World!",
