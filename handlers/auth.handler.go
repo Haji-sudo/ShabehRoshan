@@ -13,7 +13,7 @@ import (
 	"github.com/haji-sudo/ShabehRoshan/models"
 	v "github.com/haji-sudo/ShabehRoshan/models/validation"
 	"github.com/haji-sudo/ShabehRoshan/repository"
-	"github.com/haji-sudo/ShabehRoshan/router/routes"
+	"github.com/haji-sudo/ShabehRoshan/router/url"
 	"github.com/haji-sudo/ShabehRoshan/services"
 	"github.com/haji-sudo/ShabehRoshan/util"
 )
@@ -21,7 +21,7 @@ import (
 func SignUp(c *fiber.Ctx) error {
 	if c.Method() == "GET" {
 		if !middleware.CheckAuthNotValid(c) {
-			return c.Redirect(routes.Home)
+			return c.Redirect(url.Home)
 		}
 		return c.Render("user/signup", nil, Layout)
 	}
@@ -103,7 +103,7 @@ func SignUp(c *fiber.Ctx) error {
 func Login(c *fiber.Ctx) error {
 	if c.Method() == "GET" {
 		if !middleware.CheckAuthNotValid(c) {
-			return c.Redirect(routes.Home)
+			return c.Redirect(url.Home)
 		}
 		return c.Render("user/login", nil, Layout)
 	}
@@ -179,11 +179,11 @@ func Login(c *fiber.Ctx) error {
 func LogOut(c *fiber.Ctx) error {
 	sess, err := db.Store.Get(c)
 	if err != nil {
-		return c.Redirect(routes.Login)
+		return c.Redirect(url.Login)
 	}
 	sess.Destroy()
 
-	return c.Redirect(routes.Home)
+	return c.Redirect(url.Home)
 }
 func VerifyEmail(c *fiber.Ctx) error {
 	token := c.Query("token")
@@ -246,7 +246,7 @@ func ResendVerifyEmail(c *fiber.Ctx) error {
 func ResendEmail(c *fiber.Ctx) error {
 	if c.Method() == "GET" {
 		if !middleware.CheckAuthNotValid(c) {
-			return c.Redirect(routes.Home)
+			return c.Redirect(url.Home)
 		}
 		return c.Render("user/ResendEmail", nil, Layout)
 	}
@@ -292,7 +292,7 @@ func ResendEmail(c *fiber.Ctx) error {
 func ForgotPassword(c *fiber.Ctx) error {
 	if c.Method() == "GET" {
 		if !middleware.CheckAuthNotValid(c) {
-			return c.Redirect(routes.Home)
+			return c.Redirect(url.Home)
 		}
 		return c.Render("user/ForgotPassword", nil, Layout)
 	}

@@ -1,0 +1,34 @@
+<div class="container mx-auto p-6 bg-white text-black rounded">
+    <link href='https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css' rel='stylesheet'
+        type='text/css' />
+    <h1 class="text-3xl font-semibold mb-4">Create a Blog Post</h1>
+    <form hx-post={{URL "CreatePost" }} hx-target="#main">
+        <label class="block mb-2" for="title">Title</label>
+        <input type="text" placeholder="Title" name="title" class="bg-slate-50 input input-bordered w-full rounded"
+            required />
+        <label class="block mt-4 mb-2" for="myEditor">Content</label>
+        <textarea name="content" id="myEditor"></textarea>
+
+        <label class="block mt-4 mb-2" for="tags">Tags</label>
+
+        <input type="text" name="tags" placeholder="tag1, tag2, tag3"
+            class="bg-slate-50 input input-bordered w-full rounded" required />
+
+        <button class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white" type="submit">Publish</button>
+    </form>
+
+</div>
+
+<script type='text/javascript'
+    src='https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js'></script>
+<script>
+    var editor = new FroalaEditor('#myEditor', {
+        toolbarBottom: true
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        var elementToRemove = document.querySelector("#fr-logo");
+        if (elementToRemove) {
+            elementToRemove.remove();
+        }
+    });
+</script>
