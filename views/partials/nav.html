@@ -37,20 +37,21 @@
       <div class="dropdown dropdown-end">
         <label tabindex="0" class="btn btn-ghost btn-circle">
           <div class="indicator">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="white" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                d="M20 22H4C3.44772 22 3 21.5523 3 21V3C3 2.44772 3.44772 2 4 2H20C20.5523 2 21 2.44772 21 3V21C21 21.5523 20.5523 22 20 22ZM19 20V4H5V20H19ZM7 6H11V10H7V6ZM7 12H17V14H7V12ZM7 16H17V18H7V16ZM13 7H17V9H13V7Z">
+              </path>
             </svg>
-            <span class="badge badge-sm indicator-item">8</span>
+
+            <span class="badge badge-sm indicator-item bg-transparent">10</span>
           </div>
         </label>
         <div tabindex="0" class="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow">
           <div class="card-body">
-            <span class="font-bold text-lg">8 Items</span>
-            <span class="text-info">Subtotal: $999</span>
+            <span class="font-bold text-lg">10 Post</span>
+            <span class="text-info">Total Likes : 150</span>
             <div class="card-actions">
-              <button class="btn btn-primary btn-block">View cart</button>
+              <button class="btn btn-primary btn-block"><a href={{URL "CreatePost" }}>New Post</a></button>
             </div>
           </div>
         </div>

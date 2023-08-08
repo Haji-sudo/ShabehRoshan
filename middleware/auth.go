@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/haji-sudo/ShabehRoshan/db"
 	"github.com/haji-sudo/ShabehRoshan/repository"
+	"github.com/haji-sudo/ShabehRoshan/router/url"
 	"github.com/haji-sudo/ShabehRoshan/util"
 )
 
@@ -91,11 +92,11 @@ func IsAuth(c *fiber.Ctx) bool {
 func Auth(c *fiber.Ctx) error {
 	session_id := c.Cookies("session_id")
 	if session_id == "" {
-		return c.Redirect("/login")
+		return c.Redirect(url.Login)
 	}
 	sess, err := db.Store.Get(c)
 	if err != nil {
-		return c.Redirect("/login")
+		return c.Redirect(url.Login)
 	}
 	var tokenString string
 	if token, ok := sess.Get("token").(string); ok {
@@ -103,7 +104,7 @@ func Auth(c *fiber.Ctx) error {
 	}
 	if tokenString == "" {
 		sess.Destroy()
-		return c.Redirect("/login")
+		return c.Redirect(url.Login)
 	}
 	userid, err := util.ValidateToken(tokenString)
 	if err != nil {
@@ -111,7 +112,7 @@ func Auth(c *fiber.Ctx) error {
 			newToken, err := refreshToken(userid)
 			sess.Destroy()
 			if err != nil {
-				return c.Redirect("/login")
+				return c.Redirect(url.Login)
 			}
 			sess.Regenerate()
 			sess.Set("token", newToken)
@@ -119,7 +120,7 @@ func Auth(c *fiber.Ctx) error {
 			return c.Next()
 		}
 		sess.Destroy()
-		return c.Redirect("/login")
+		return c.Redirect(url.Login)
 	}
 	c.Locals("userid", userid)
 	return c.Next()

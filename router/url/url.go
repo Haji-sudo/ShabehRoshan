@@ -1,4 +1,4 @@
-package routes
+package url
 
 const (
 	Home              string = "/"
@@ -12,6 +12,10 @@ const (
 	Logout            string = "/logout"
 	Profile           string = "/profile"
 	Settings          string = "/settings"
+	Static            string = "/public"
+
+	//Blog
+	CreatePost string = "/CreatePost"
 
 	UserPanel string = "Dashboard"
 
@@ -20,6 +24,7 @@ const (
 
 func Geturlpath() map[string]string {
 	return map[string]string{
+		"Static":            Static,
 		"Home":              Home,
 		"About":             About,
 		"Signup":            SignUp,
@@ -31,5 +36,6 @@ func Geturlpath() map[string]string {
 		"Logout":            "/" + UserPanel + Logout,
 		"Profile":           "/" + UserPanel + Profile,
 		"Settings":          "/" + UserPanel + Settings,
+		"CreatePost":        "/" + UserPanel + CreatePost,
 	}
 }

@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/gofiber/template/html/v2"
-	"github.com/haji-sudo/ShabehRoshan/router/routes"
+	"github.com/haji-sudo/ShabehRoshan/router/url"
 	"github.com/joho/godotenv"
 )
 
@@ -40,8 +40,8 @@ func Init() {
 		return
 	})
 
-	Engine.AddFunc("URL", func(url string) template.HTML {
-		return template.HTML(routes.Geturlpath()[url])
+	Engine.AddFunc("URL", func(path string) template.HTML {
+		return template.HTML(url.Geturlpath()[path])
 	})
 
 }
