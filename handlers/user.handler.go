@@ -89,7 +89,7 @@ func UpdateProfile(c *fiber.Ctx) error {
 				"error": errorData,
 				"user":  data})
 		}
-		user.Profile.ProfilePicture = photoName
+		user.Profile.Picture = photoName
 	}
 
 	user.Profile.Name = name

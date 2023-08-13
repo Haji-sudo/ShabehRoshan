@@ -8,11 +8,11 @@ import (
 )
 
 type BlogRepository interface {
-	GetByID(id uuid.UUID) (*models.Blog, error)
-	GetByTitle(title string) ([]models.Blog, error)
-	Create(blog *models.Blog) error
-	Update(blog *models.Blog) error
-	Delete(blog *models.Blog) error
+	GetByID(id uuid.UUID) (*models.Post, error)
+	GetByTitle(title string) ([]models.Post, error)
+	Create(blog *models.Post) error
+	Update(blog *models.Post) error
+	Delete(blog *models.Post) error
 }
 
 type blogRepo struct {
@@ -26,14 +26,14 @@ func NewBlogRepository() BlogRepository {
 	return repo
 }
 
-func (r *blogRepo) GetByID(id uuid.UUID) (*models.Blog, error) {
-	blog := new(models.Blog)
+func (r *blogRepo) GetByID(id uuid.UUID) (*models.Post, error) {
+	blog := new(models.Post)
 
 	return blog, nil
 }
 
-func (r *blogRepo) GetByTitle(title string) ([]models.Blog, error) {
-	blogs := []models.Blog{}
+func (r *blogRepo) GetByTitle(title string) ([]models.Post, error) {
+	blogs := []models.Post{}
 	err := r.db.Where("title LIKE ?", "%"+title+"%").Find(&blogs).Error
 	if err != nil {
 		return nil, err
@@ -41,17 +41,17 @@ func (r *blogRepo) GetByTitle(title string) ([]models.Blog, error) {
 
 	return blogs, nil
 }
-func (r *blogRepo) Create(blog *models.Blog) error {
+func (r *blogRepo) Create(blog *models.Post) error {
 
 	return r.db.Create(blog).Error
 }
 
-func (r *blogRepo) Update(blog *models.Blog) error {
+func (r *blogRepo) Update(blog *models.Post) error {
 
 	return r.db.Save(blog).Error
 }
 
-func (r *blogRepo) Delete(blog *models.Blog) error {
+func (r *blogRepo) Delete(blog *models.Post) error {
 
 	return r.db.Delete(blog).Error
 }

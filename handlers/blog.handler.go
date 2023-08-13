@@ -20,14 +20,14 @@ func CreatePost(c *fiber.Ctx) error {
 		}
 		return c.Render("blog/createblog", fiber.Map{"user": user}, Layout)
 	}
-	blog := new(models.Blog)
-	blog.AuthorID = uuid.MustParse(c.Locals("userid").(string))
-	blog.ID = uuid.New()
-	blog.PublishDate = time.Now()
-	blog.Title = c.FormValue("title")
-	blog.Content = c.FormValue("content")
+	post := new(models.Post)
+	post.UserID = uuid.MustParse(c.Locals("userid").(string))
+	post.ID = uuid.New()
+	post.PublishDate = time.Now()
+	post.Title = c.FormValue("title")
+	post.Content = c.FormValue("content")
 	repo := repository.NewBlogRepository()
 
-	repo.Create(blog)
+	repo.Create(post)
 	return c.SendString("Done")
 }

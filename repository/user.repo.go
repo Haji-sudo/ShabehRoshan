@@ -25,7 +25,7 @@ type UserRepository interface {
 	UpdateProfile(user *m.User) error
 
 	BatchUpdate(user *m.User) error
-	GetAllPosts(userid uuid.UUID) ([]m.Blog, error)
+	GetAllPosts(userid uuid.UUID) ([]m.Post, error)
 }
 
 type userRepo struct {
@@ -100,13 +100,13 @@ func (r *userRepo) GetProfile(user *m.User) error {
 	return nil
 }
 
-func (r *userRepo) GetAllPosts(userid uuid.UUID) ([]m.Blog, error) {
-	blogs := []m.Blog{}
-	err := db.DB.Where("auther_id = ?", userid).Find(&blogs).Error
+func (r *userRepo) GetAllPosts(userid uuid.UUID) ([]m.Post, error) {
+	posts := []m.Post{}
+	err := db.DB.Where("auther_id = ?", userid).Find(&posts).Error
 	if err != nil {
 		return nil, err
 	}
-	return blogs, nil
+	return posts, nil
 }
 
 func (r *userRepo) Create(user *m.User) error {
