@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"log"
-	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -78,7 +77,7 @@ func SignUp(c *fiber.Ctx) error {
 		return c.Render("user/error", "Something Wrong in Password hashing try again !!")
 	}
 
-	user := models.User{ID: uuid.New(), Username: strings.ToLower(username), Email: strings.ToLower(email), Password: string(hashpw), Profile: models.Profile{Name: name}}
+	user := models.User{ID: uuid.New(), Username: username, Email: email, Password: string(hashpw), Profile: models.Profile{Name: name}}
 	err = repo.Create(&user)
 	if err != nil {
 		repo.Delete(&user)

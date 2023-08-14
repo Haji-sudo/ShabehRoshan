@@ -1,12 +1,12 @@
 package handlers
 
 import (
-	"time"
-
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"github.com/haji-sudo/ShabehRoshan/models"
+	m "github.com/haji-sudo/ShabehRoshan/models/validation"
 	"github.com/haji-sudo/ShabehRoshan/repository"
+	"github.com/haji-sudo/ShabehRoshan/util"
 )
 
 func CreatePost(c *fiber.Ctx) error {
@@ -20,14 +20,28 @@ func CreatePost(c *fiber.Ctx) error {
 		}
 		return c.Render("blog/createblog", fiber.Map{"user": user}, Layout)
 	}
-	post := new(models.Post)
-	post.UserID = uuid.MustParse(c.Locals("userid").(string))
-	post.ID = uuid.New()
-	post.PublishDate = time.Now()
-	post.Title = c.FormValue("title")
-	post.Content = c.FormValue("content")
-	repo := repository.NewBlogRepository()
+	photo, loadPhoto := c.FormFile("coverimage")
+	postData := m.CreatePost{Title: c.FormValue("title"), Content: c.FormValue("content"), Tag: c.FormValue("tags")}
+	errorData := new(m.CreatePost)
+	err := util.ValidateCreatePost(postData)
+	if err != nil {
+		for _, v := range err.(validator.ValidationErrors) {
+			if v.Field() == "Title" {
+				errorData.Title = "Max Character is 100"
+			} else if v.Field() == "Content" {
+				errorData.Content = "Max Character is 10,000"
+			} else if v.Field() == "Tag" {
+				errorData.Tag = "Max Character is 100"
+			}
+		}
+		return c.Render("blog/createblog", fiber.Map{"error": errorData, "data": postData})
+	} else if loadPhoto == nil {
+		if photo.Size > (5 * 1024 * 1024) {
+			errorData.Photo = "Max size is 5MB"
+			return c.Render("blog/createblog", fiber.Map{"error": errorData, "data": postData})
+		}
+	}
+	util.SavePhotoAndOptimze(photo)
 
-	repo.Create(post)
 	return c.SendString("Done")
 }
