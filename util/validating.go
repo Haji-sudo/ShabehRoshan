@@ -70,3 +70,13 @@ func ValidateUpdateProfileInput(name, username, bio string) error {
 	}
 	return nil
 }
+
+func ValidateCreatePost(post vm.CreatePost) error {
+	// Create a new validator instance
+	validate := validator.New()
+	// Validate the struct fields
+	if err := validate.Struct(post); err != nil {
+		return err
+	}
+	return nil
+}

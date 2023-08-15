@@ -18,3 +18,10 @@ type UpdateProfile struct {
 	Username string `validate:"required,min=4,max=20,alphanum"`
 	Bio      string `validate:"max=256"`
 }
+
+type CreatePost struct {
+	Title   string `validate:"max=100"`
+	Content string `validate:"max=10000"`
+	Tag     string `validate:"max=100"`
+	Photo   string
+}

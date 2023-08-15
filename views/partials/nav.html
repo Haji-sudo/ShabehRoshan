@@ -60,10 +60,10 @@
     <div class="dropdown dropdown-end">
       <label tabindex="0" class="btn btn-ghost btn-circle avatar">
         <div class="w-10 rounded-full">
-          {{ with eq .user.Profile.ProfilePicture "" }}
+          {{ with eq .user.Profile.Picture "" }}
           <img src="/public/images/profile.jpg" alt="User Avatar" class="w-48 h-48 object-cover rounded-md mb-4" />
           {{else}}
-          <img src="/public/profile/{{ .user.Profile.ProfilePicture }}" alt="User Avatar"
+          <img src="/public/profile/{{ .user.Profile.Picture }}" alt="User Avatar"
             class="w-48 h-48 object-cover rounded-md mb-4" />
           {{end}}
         </div>

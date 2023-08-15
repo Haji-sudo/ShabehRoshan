@@ -38,14 +38,15 @@ func Init() {
 func autoMigrateTables() {
 	err := DB.AutoMigrate(
 		&models.User{},
+		&models.Token{},
 		&models.Profile{},
 		&models.SocialLogin{},
-		&models.Token{},
-		&models.Blog{},
-		&models.Tag{},
-		&models.BlogTag{},
+		&models.Post{},
 		&models.Comment{},
 		&models.Like{},
+		&models.Tag{},
+		&models.Category{},
+		&models.Subscription{},
 	)
 	if err != nil {
 		log.Fatalln(err)

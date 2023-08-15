@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"log"
-	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -78,7 +77,7 @@ func SignUp(c *fiber.Ctx) error {
 		return c.Render("user/error", "Something Wrong in Password hashing try again !!")
 	}
 
-	user := models.User{ID: uuid.New(), Username: strings.ToLower(username), Email: strings.ToLower(email), PasswordHash: string(hashpw), Profile: models.Profile{Name: name}}
+	user := models.User{ID: uuid.New(), Username: username, Email: email, Password: string(hashpw), Profile: models.Profile{Name: name}}
 	err = repo.Create(&user)
 	if err != nil {
 		repo.Delete(&user)
@@ -143,7 +142,7 @@ func Login(c *fiber.Ctx) error {
 	if user, err := repo.GetByEmail(email); err != nil {
 		log.Println(err)
 		return c.Status(200).Render("user/login", fiber.Map{"NotSuccess": "Something went wrong."})
-	} else if err := util.ComparePassword([]byte(user.PasswordHash), password); err != nil {
+	} else if err := util.ComparePassword([]byte(user.Password), password); err != nil {
 		return c.Status(200).Render("user/login", fiber.Map{"NotSuccess": "Login unsuccessful. Please check your credentials and try again."})
 	} else if !user.EmailVerified {
 		return c.Status(200).Render("user/login", fiber.Map{"NotSuccess": "Your email has not been verified yet. Confirm your email first", "notverfied": user.Email})
@@ -399,10 +398,10 @@ func ResetPassword(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Render("user/error", "Something Wrong in Password hashing try again !!")
 	}
-	if err := util.ComparePassword([]byte(user.PasswordHash), password); err == nil {
+	if err := util.ComparePassword([]byte(user.Password), password); err == nil {
 		return c.Render("user/error", "The password is the same as your previous password")
 	}
-	user.PasswordHash = string(hashpw)
+	user.Password = string(hashpw)
 	user.Token.ForgotPasswordToken = ""
 
 	repo.Update(user)

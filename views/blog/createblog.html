@@ -1,21 +1,54 @@
-<div class="container mx-auto p-6 bg-white text-black rounded">
+<div class="container mx-auto p-6 bg-white text-black rounded" id="CreatePost">
     <link href='https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css' rel='stylesheet'
         type='text/css' />
     <h1 class="text-3xl font-semibold mb-4">Create a Blog Post</h1>
-    <form hx-post={{URL "CreatePost" }} hx-target="#main">
+    <form hx-post={{URL "CreatePost" }} hx-target="#CreatePost" hx-encoding='multipart/form-data'>
+
         <label class="block mb-2" for="title">Title</label>
         <input type="text" placeholder="Title" name="title" class="bg-slate-50 input input-bordered w-full rounded"
-            required />
+            value="{{ .data.Title }}" required />
+        {{ if .error.Title }}
+        <label class="label">
+            <span class="label-text-alt text-red-600">
+                {{ .error.Title }}
+            </span>
+        </label>
+        {{ end }}
         <label class="block mt-4 mb-2" for="myEditor">Content</label>
-        <textarea name="content" id="myEditor"></textarea>
+        <textarea name="content" id="myEditor" value="{{ .data.Content }}"></textarea>
+        {{ if .error.Content }}
+        <label class="label">
+            <span class="label-text-alt text-red-600">
+                {{ .error.Content }}
+            </span>
+        </label>
+        {{ end }}
+        <br><br>
+        <label for="coverimage" class="block mb-2">Cover Image: </label>
+        <input type="file" id="coverimage" name="coverimage" accept="image/*"
+            class="appearance-none bg-slate-50 rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline" />
+        {{ if .error.Photo }}
+        <label class="label">
+            <span class="label-text-alt text-red-600">
+                {{ .error.Photo }}
+            </span>
+        </label>
+        {{ end }}
 
         <label class="block mt-4 mb-2" for="tags">Tags</label>
-
         <input type="text" name="tags" placeholder="tag1, tag2, tag3"
-            class="bg-slate-50 input input-bordered w-full rounded" required />
-
+            class="bg-slate-50 input input-bordered w-full rounded" value="{{ .data.Tag }}" required />
+        {{ if .error.Tag }}
+        <label class="label">
+            <span class="label-text-alt text-red-600">
+                {{ .error.Tag }}
+            </span>
+        </label>
+        {{ end }}
         <button class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white" type="submit">Publish</button>
-    </form>
+</div>
+
+</form>
 
 </div>
 
