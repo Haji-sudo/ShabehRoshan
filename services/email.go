@@ -8,6 +8,7 @@ import (
 	"github.com/haji-sudo/ShabehRoshan/config"
 )
 
+// TODO: Implement send email with queue
 func SendVerificationEmail(to, username, token string) error {
 	data := struct {
 		Username         string

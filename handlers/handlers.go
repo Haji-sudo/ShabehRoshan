@@ -15,19 +15,17 @@ const Layout = "layouts/main"
 
 // Home renders the home view
 func Home(c *fiber.Ctx) error {
+	blog_repo := repository.NewBlogRepository()
+	posts := blog_repo.Get10LastPost()
 	if middleware.IsAuth(c) {
 		repo := repository.NewUserRepository()
 		userid := c.Locals("userid").(string)
 		user, _ := repo.GetByID(uuid.MustParse(userid))
 		repo.GetProfile(user)
-		return c.Render("index", fiber.Map{
-			"Title": "Hello", "user": user,
-		}, Layout)
+		return c.Render("index", fiber.Map{"user": user, "posts": posts}, Layout)
 
 	}
-	return c.Render("index", fiber.Map{
-		"Title": "Hello, World!",
-	}, Layout)
+	return c.Render("index", fiber.Map{"posts": posts}, Layout)
 }
 
 // About renders the about view
@@ -64,7 +62,7 @@ func Test(c *fiber.Ctx) error {
 	return nil
 }
 
-// NoutFound renders the 404 view
+// NotFound renders the 404 view
 func NotFound(c *fiber.Ctx) error {
 	if middleware.IsAuth(c) {
 		return c.Status(404).Render("partials/404", fiber.Map{"user": "test"}, Layout)
