@@ -4,6 +4,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	"github.com/haji-sudo/ShabehRoshan/models"
 	m "github.com/haji-sudo/ShabehRoshan/models/validation"
 	"github.com/haji-sudo/ShabehRoshan/repository"
 	"github.com/haji-sudo/ShabehRoshan/util"
@@ -41,7 +42,13 @@ func CreatePost(c *fiber.Ctx) error {
 			return c.Render("blog/createblog", fiber.Map{"error": errorData, "data": postData})
 		}
 	}
-	util.SavePhotoAndOptimze(photo)
 
+	userid := c.Locals("userid").(string)
+	urepo := repository.NewUserRepository()
+	user, _ := urepo.GetByID(uuid.MustParse(userid))
+	imgname, _ := util.SaveImageAndOptimize(photo)
+	brepo := repository.NewBlogRepository()
+	post := models.Post{ID: uuid.New(), Title: postData.Title, Content: postData.Content, CoverImage: imgname, User: *user}
+	brepo.Create(&post)
 	return c.SendString("Done")
 }

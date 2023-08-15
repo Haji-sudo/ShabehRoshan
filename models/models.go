@@ -47,11 +47,11 @@ type SocialLogin struct {
 }
 
 type Post struct {
-	ID          uuid.UUID `gorm:"primaryKey;type:uuid;" json:"post_id"`
-	Title       string    `gorm:"type:varchar(255)" json:"title"`
-	Content     string    `gorm:"type:text" json:"content"`
-	CoverImage  string    `json:"cover_image"`
-	PublishDate time.Time
+	ID          uuid.UUID  `gorm:"primaryKey;type:uuid;" json:"post_id"`
+	Title       string     `gorm:"type:varchar(255)" json:"title"`
+	Content     string     `gorm:"type:text" json:"content"`
+	CoverImage  string     `json:"cover_image"`
+	PublishDate time.Time  `gorm:"autoCreateTime" json:"published_at"`
 	UserID      uuid.UUID  `gorm:"not null;type:uuid;constraint:OnDelete:CASCADE;"`
 	User        User       `gorm:"foreignkey:UserID"`
 	Comments    []Comment  `gorm:"foreignkey:PostID;constraint:OnDelete:CASCADE;"`

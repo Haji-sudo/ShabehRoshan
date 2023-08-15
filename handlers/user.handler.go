@@ -82,7 +82,7 @@ func UpdateProfile(c *fiber.Ctx) error {
 	}
 	repo.GetProfile(user)
 	if loadPhoto == nil {
-		photoName, err := util.SavePhotoAndOptimze(photo)
+		photoName, err := util.SaveProfileImageAndOptimize(photo)
 		if err != nil {
 			errorData.Photo = "Something wrong in saving photo"
 			return c.Render("user/settings", fiber.Map{
