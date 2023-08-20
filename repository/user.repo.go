@@ -102,7 +102,7 @@ func (r *userRepo) GetProfile(user *m.User) error {
 
 func (r *userRepo) GetAllPosts(userid uuid.UUID) ([]m.Post, error) {
 	posts := []m.Post{}
-	err := db.DB.Where("auther_id = ?", userid).Find(&posts).Error
+	err := db.DB.Where("author_id = ?", userid).Find(&posts).Error
 	if err != nil {
 		return nil, err
 	}
