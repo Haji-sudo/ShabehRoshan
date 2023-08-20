@@ -1,4 +1,4 @@
-<nav class="navbar fixed top-0 left-0 w-full">
+<nav class="container navbar fixed top-0 w-full z-10 bg-slate-800">
   <div class="navbar-start">
     <div class="dropdown">
       <label tabindex="0" class="btn btn-ghost btn-circle">
@@ -51,7 +51,7 @@
             <span class="font-bold text-lg">10 Post</span>
             <span class="text-info">Total Likes : 150</span>
             <div class="card-actions">
-              <button class="btn btn-primary btn-block"><a href={{URL "CreatePost" }}>New Post</a></button>
+              <a href={{URL "CreatePost" }} class="btn btn-primary btn-block">New Post</a>
             </div>
           </div>
         </div>

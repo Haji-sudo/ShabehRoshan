@@ -9,10 +9,10 @@
   <script src="https://unpkg.com/htmx.org@1.9.2"></script>
 </head>
 
-<body class="container w-screen h-screen place-content-center bg-BgBlack">
+<body class="container mx-auto w-screen h-screen place-content-center bg-BgBlack">
   {{template "partials/nav" .}}
 
-  <main id="main" class="">
+  <main id="main" class="container mx-auto flex flex-col items-center justify-center min-h-screen pt-16">
     {{embed}}
   </main>
 </body>
