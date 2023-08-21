@@ -44,4 +44,8 @@ func Init() {
 		return template.HTML(url.Geturlpath()[path])
 	})
 
+	Engine.AddFunc("SafeHTML", func(content string) template.HTML {
+		return template.HTML(content)
+	})
+
 }

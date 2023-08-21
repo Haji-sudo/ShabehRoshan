@@ -32,6 +32,8 @@ func SetupRoutes(app *fiber.App) {
 	app.Post(url.ForgotPassword, handlers.ForgotPassword)
 	app.Post(url.ResetPassword, handlers.ResetPassword)
 
+	app.Get(url.Post+"/:postID", handlers.GetPost)
+
 	protected := app.Group(url.UserPanel, middleware.Auth)
 	protected.Get(url.Logout, handlers.LogOut)
 	protected.Get(url.About, handlers.About)

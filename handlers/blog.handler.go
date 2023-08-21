@@ -52,3 +52,17 @@ func CreatePost(c *fiber.Ctx) error {
 	brepo.Create(&post)
 	return c.SendString("Done")
 }
+
+func GetPost(c *fiber.Ctx) error {
+	postID, err := uuid.Parse(c.Params("postID"))
+	if err != nil {
+		return c.SendString("Id Not Valid")
+	}
+	repo := repository.NewBlogRepository()
+	post, err := repo.GetByID(postID)
+	if err != nil {
+		return c.SendString("Post not found")
+	}
+	return c.Render("blog/blogArticle", fiber.Map{"post": post}, Layout)
+
+}
