@@ -31,6 +31,10 @@ func NewBlogRepository() BlogRepository {
 
 func (r *blogRepo) GetByID(id uuid.UUID) (*models.Post, error) {
 	blog := new(models.Post)
+	err := r.db.Where("id = ?", id.String()).First(&blog).Error
+	if err != nil {
+		return nil, err
+	}
 	return blog, nil
 }
 

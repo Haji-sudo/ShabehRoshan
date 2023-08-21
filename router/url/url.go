@@ -16,6 +16,7 @@ const (
 
 	//Blog
 	CreatePost string = "/CreatePost"
+	Post       string = "/post"
 
 	UserPanel string = "Dashboard"
 
@@ -37,5 +38,7 @@ func Geturlpath() map[string]string {
 		"Profile":           "/" + UserPanel + Profile,
 		"Settings":          "/" + UserPanel + Settings,
 		"CreatePost":        "/" + UserPanel + CreatePost,
+
+		"Post": Post,
 	}
 }
