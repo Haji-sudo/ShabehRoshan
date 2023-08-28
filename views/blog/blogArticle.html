@@ -25,7 +25,9 @@
                         <p class="text-xs sm:text-sm text-gray-800 dark:text-gray-200">January 18, 2023</p>
                     </div>
 
-                    <p class="text-lg text-gray-800 dark:text-gray-200">{{SafeHTML .post.Content}}</p>
+                    <div class="mt-8 prose">
+                        {{SafeHTML .post.Content}}
+                    </div>
 
 
                     <div class="grid lg:flex lg:justify-between lg:items-center gap-y-5 lg:gap-y-0">
